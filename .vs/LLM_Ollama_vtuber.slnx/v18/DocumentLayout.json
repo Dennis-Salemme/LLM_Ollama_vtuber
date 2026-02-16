@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\salem\\source\\repos\\LLM_Ollama_vtuber\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D885A92B-5EE1-461C-89E0-BDCFDDBDFE84}|LLM_Ollama_vtuber\\LLM_Ollama_vtuber.pyproj|C:\\Users\\salem\\source\\repos\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{D885A92B-5EE1-461C-89E0-BDCFDDBDFE84}|LLM_Ollama_vtuber\\LLM_Ollama_vtuber.pyproj|solutionrelative:LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LLM_Ollama_vtuber.py",
+              "DocumentMoniker": "C:\\Users\\salem\\source\\repos\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py",
+              "RelativeDocumentMoniker": "LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py",
+              "ToolTip": "C:\\Users\\salem\\source\\repos\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py",
+              "RelativeToolTip": "LLM_Ollama_vtuber\\LLM_Ollama_vtuber.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2026-02-16T21:48:47.881Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
