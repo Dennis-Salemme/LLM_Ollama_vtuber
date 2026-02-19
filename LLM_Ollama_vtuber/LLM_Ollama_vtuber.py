@@ -52,7 +52,7 @@ async def vision_moondream_task():
     while True:
         if (prompt.lower() == 'esci'):                                   #lo faccio uscire quando scrivo esci
             break
-        image = open("C:\\Users\\salem\\Pictures\\Screenshots\\Screenshot.png", "rb")
+        image = open("image", "rb")
 
         vision_message = await AsyncClient().ollama.generate(model=model_moondream, prompt="Describe what's happening in this screenshot.",images=[image.read()])['response']
         #print(vision_message)
