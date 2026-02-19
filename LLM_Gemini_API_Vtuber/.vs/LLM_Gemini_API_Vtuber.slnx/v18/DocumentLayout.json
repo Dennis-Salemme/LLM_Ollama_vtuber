@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\salem\\source\\repos\\LLM_Gemini_API_Vtuber\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|C:\\Users\\salem\\source\\repos\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|solutionrelative:LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LLM_Gemini_API_Vtuber.py",
+              "DocumentMoniker": "C:\\Users\\salem\\source\\repos\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "RelativeDocumentMoniker": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "ToolTip": "C:\\Users\\salem\\source\\repos\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "RelativeToolTip": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2026-02-19T12:19:48.529Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

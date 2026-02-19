@@ -33,7 +33,7 @@ async def chat_ollama_task():
 
         print("Bot: ", end="", flush=True)                               
         bot_mc = ""
-        response = chat(model=model_llama, messages=history,  stream=True)                     #faccio in modo che il bot mi rispoda parola per parola cosi non aspetto troppo per un messaggio
+        response = await AsyncClient().chat(model=model_llama, messages=history,  stream=True)                     #faccio in modo che il bot mi rispoda parola per parola cosi non aspetto troppo per un messaggio
         for chunk in response:
             bot_mc += chunk.message.content
             print(chunk.message.content, end="", flush=True)
@@ -49,13 +49,12 @@ async def chat_ollama_task():
 async def vision_moondream_task():
     global prompt, vision_message
     model_moondream= 'moondream' 
-    client = AsyncClient()
     while True:
         if (prompt.lower() == 'esci'):                                   #lo faccio uscire quando scrivo esci
             break
         image = open("C:\\Users\\salem\\Pictures\\Screenshots\\Screenshot.png", "rb")
 
-        vision_message = ollama.generate(model=model_moondream, prompt="Describe what's happening in this screenshot.",images=[image.read()])['response']
+        vision_message = await AsyncClient().ollama.generate(model=model_moondream, prompt="Describe what's happening in this screenshot.",images=[image.read()])['response']
         #print(vision_message)
         await asyncio.sleep(15)
 
