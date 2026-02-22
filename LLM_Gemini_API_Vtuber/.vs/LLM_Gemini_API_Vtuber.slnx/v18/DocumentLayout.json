@@ -18,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LLM_Gemini_API_Vtuber.py",
+              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "RelativeDocumentMoniker": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "RelativeToolTip": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACcAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2026-02-19T12:19:48.529Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -30,21 +43,7 @@
               "RelativeToolTip": "LLM_Gemini_API_Vtuber\\subtitles.py",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-02-21T17:51:56.375Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "LLM_Gemini_API_Vtuber.py",
-              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "RelativeDocumentMoniker": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "RelativeToolTip": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB4AAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-02-19T12:19:48.529Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T17:51:56.375Z"
             }
           ]
         }
