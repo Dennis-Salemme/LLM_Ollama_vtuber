@@ -10,6 +10,7 @@ from faster_whisper import WhisperModel
 import torch
 import numpy as np
 from groq import AsyncGroq
+import subtitles as sub
 
 model_groq = 'llama-3.3-70b-versatile'
 API_KEY_GROQ = ""
@@ -21,10 +22,10 @@ message_groq=[{'role': 'system', 'content': '''Sei BMO.
 REGOLE: 
 1) Rispondi ESCLUSIVAMENTE in italiano con il tono di BMO (curioso, infantile, gentile).
 2) Usa il contesto precedente per mantenere la coerenza.
-3) Rispondi brevemente (max 3 frasi). TUTTAVIA Se l'utente chiede spiegazioni tecniche o storie lunghe, espandi liberamente.
-4) Riceverai descrizioni dello schermo tra parentesi [ ], non descriverle tecnicamente'''}]                                    #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
+3) Rispondi brevemente (max 2 frasi). TUTTAVIA Se l'utente chiede spiegazioni tecniche o storie lunghe, espandi liberamente.
+4) Riceverai descrizioni dello schermo tra parentesi [ ], non descriverle'''}]                                    #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
 history = message_groq
-disactive_vad = False
+shared_state = {"disactive_vad": False}
 
 model_gemini = 'gemma-3-27b-it' 
 API_KEY_GEMINI = ""
@@ -41,10 +42,9 @@ model_vad, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='sile
 (get_speech_timestamps, save_audio, read_audio, VADIterator, collect_chunks) = utils
 
 async def listen_task(input_queue):
-    global running, disactive_vad
+    global running
     fs = 16000
     chunk_size = 512 
-    
     loop = asyncio.get_running_loop()
     audio_buffer = []
     sta_parlando = False
@@ -54,7 +54,7 @@ async def listen_task(input_queue):
     def audio_callback(indata, frames, time, status):
         nonlocal sta_parlando, audio_buffer
         if status: print(status)
-        if(disactive_vad):
+        if(shared_state["disactive_vad"]):
             if(sta_parlando):
                 audio_buffer = []
                 sta_parlando = False
@@ -62,16 +62,17 @@ async def listen_task(input_queue):
         audio_chunk = torch.from_numpy(indata.flatten()).float()                                             # Convertiamo l'audio in un tensore per Silero
         speech_prob = model_vad(audio_chunk, fs).item()
         
-        if speech_prob > 0.4:                                                                        # Soglia di confidenza 
+        if (speech_prob > 0.4):                                                                        # Soglia di confidenza 
             if not sta_parlando:
                 print("Voce rilevata")
                 sta_parlando = True
             audio_buffer.append(indata.copy())
         elif sta_parlando:                                                                           
             audio_buffer.append(indata.copy())
-            if len(audio_buffer) > 30:                                                               
+            if len(audio_buffer) > 40:                                                               
                 print("Fine frase")
                 sta_parlando = False
+                shared_state["disactive_vad"] = True
                 full_audio = np.concatenate(audio_buffer).flatten()
                 audio_buffer = []
                 
@@ -88,7 +89,7 @@ async def listen_task(input_queue):
         while running:
             await asyncio.sleep(0.1)
 
-async def chat_groq_task(input_queue):
+async def chat_groq_task(input_queue, window_trasparent):
     global history, prompt, vision_message, model_gemini, running, disactive_vad
     while True:
         #loop = asyncio.get_event_loop()                             #in questo modo non si dovrebbe fermare tutto il programma
@@ -99,7 +100,6 @@ async def chat_groq_task(input_queue):
             print("Arrivederci")
             break
         
-        disactive_vad = True
         print("microfono disattivato")
         full_prompt = f"[Schermo visione:{vision_message}] Utente dice:{prompt}"
         history.append({'role': 'user', "content": full_prompt})                                          #mi tengo una storia dei messaggi in modo che il bot e i miei in modo si ricordi i messaggi vecchi(forse mettere un massimo di ricordo es max 3)
@@ -108,13 +108,13 @@ async def chat_groq_task(input_queue):
             response = (await groq_client.chat.completions.create(messages=history, model=model_groq, temperature=0.7)).choices[0].message.content
         except Exception as e:
             print(f"Errore IA: {e}")
-            disactive_vad = False
+            shared_state["disactive_vad"] = False
             continue
         #response = await AsyncClient().chat(model=model_llama, messages=history,  stream=True)                     #faccio in modo che il bot mi rispoda parola per parola cosi non aspetto troppo per un messaggio
         print(f"\nBot: {response}")                                                             
-
+        window_trasparent.update_text(response)
         history.append({'role': 'assistant', "content":response})
-        disactive_vad = False
+        shared_state["disactive_vad"] = False
         print("microfono attivato")
         if len(history) > 10:
             history = [history[0]] + history[-8:]                         # Mantengo il primo + gli ultimi 8, perchè se mantenesse tutti i messaggi non riuscirebbe più a capire cosa fare
@@ -130,10 +130,10 @@ def get_screenshot():
         return img_byte_arr.getvalue()
 
 async def vision_gemini_task():
-    global prompt, vision_message, model_gemini, running, disactive_vad
+    global prompt, vision_message, model_gemini, running
     model_moondream= 'moondream' 
     while running:
-        if disactive_vad:
+        if shared_state["disactive_vad"]:
             await asyncio.sleep(5)
             continue
         loop = asyncio.get_event_loop()
@@ -147,9 +147,17 @@ async def vision_gemini_task():
 
         await asyncio.sleep(15)
 
+
+async def overlay_task(overlay):
+    while True:
+        overlay.root.update()
+        await asyncio.sleep(0.05)
+
 async def main():
     input_queue = asyncio.Queue()
-    await asyncio.gather(chat_groq_task(input_queue), vision_gemini_task(), listen_task(input_queue))
+    window_trasparent = sub.SubtitleOverlay()
+    window_trasparent.toggle_subtitles(True)
+    await asyncio.gather(chat_groq_task(input_queue, window_trasparent), vision_gemini_task(), listen_task(input_queue), overlay_task(window_trasparent))
 
-#inizio del main di quello che interessa
+
 asyncio.run(main())
