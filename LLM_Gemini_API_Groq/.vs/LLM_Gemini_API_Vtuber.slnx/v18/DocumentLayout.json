@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\",
+  "WorkspaceRootPath": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|solutionrelative:LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\subtitles.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\subtitles.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{29228155-BE15-4D1C-8B0C-90FD7D6F88FE}|LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.pyproj|solutionrelative:LLM_Gemini_API_Vtuber\\subtitles.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
@@ -24,11 +24,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "LLM_Gemini_API_Vtuber.py",
-              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
               "RelativeDocumentMoniker": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
+              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
               "RelativeToolTip": "LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber.py",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAC4AAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAAAC4AAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2026-02-19T12:19:48.529Z",
               "EditorCaption": ""
@@ -37,9 +37,9 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "subtitles.py",
-              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\subtitles.py",
+              "DocumentMoniker": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\subtitles.py",
               "RelativeDocumentMoniker": "LLM_Gemini_API_Vtuber\\subtitles.py",
-              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Vtuber\\LLM_Gemini_API_Vtuber\\subtitles.py",
+              "ToolTip": "C:\\Users\\salem\\Desktop\\LLM_vtuber\\LLM_Gemini_API_Groq\\LLM_Gemini_API_Vtuber\\subtitles.py",
               "RelativeToolTip": "LLM_Gemini_API_Vtuber\\subtitles.py",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",

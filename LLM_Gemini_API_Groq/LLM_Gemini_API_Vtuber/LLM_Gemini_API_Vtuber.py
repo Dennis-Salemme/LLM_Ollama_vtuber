@@ -17,8 +17,11 @@ import soundfile as sf
 import keyboard
 import tempfile
 import os
+from duckduckgo_search import DDGS
+import json
+import re
 
-subtitles_active = False
+subtitles_active = True
 model_groq = 'llama-3.3-70b-versatile'
 API_KEY_GROQ = ""
 groq_client = AsyncGroq(api_key=API_KEY_GROQ)
@@ -32,14 +35,21 @@ REGOLE:
 2) Usa il contesto precedente per mantenere la coerenza.
 3) Rispondi brevemente (max 3 frasi).
 4) Riceverai descrizioni dello schermo tra parentesi [ ], NON ripetere all'utente quello che c'è scritto, usa quelle info segretamente per capire cosa succede.
-5) Usa tutti gli indizi che ricevi dalla visione (lingua dei cartelli, alberi, lato della guida, architettura) per ragionare ad alta voce e suggerire all'utente in quale nazione o regione potreste trovarvi. Sii d'aiuto e incoraggiante!'''}]                                    #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
+5) Usa tutti gli indizi che ricevi dalla visione (lingua dei cartelli, alberi, lato della guida, architettura) per ragionare ad alta voce e suggerire all'utente in quale nazione o regione potreste trovarvi. Sii d'aiuto e incoraggiante!
+6) Se l'utente ti chiede di fare una ricerca, rispondi SOLO con il comando SEARCH: ["query1", "query2"] e NULLA ALTRO. Non commentare prima del comando.
+7) Se ricevi dei [RISULTATI RICERCA], usali per rispondere alla domanda di prima.
+8) NON copiare il formato dell'input dell'utente (non scrivere "Hai detto").
+9) Se l'utente ti chiede di vedere qual'cosa sullo schermo, rispondi SOLO con il comando SNAP.'''}]                                    #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
 message_groq_normal=[{'role': 'system', 'content': '''Sei BMO di Adventure Time. 
 REGOLE: 
 1) Rispondi ESCLUSIVAMENTE in italiano con il tono di BMO (curioso, infantile, gentile).
 2) Usa il contesto precedente per mantenere la coerenza.
 3) Rispondi brevemente (max 3 frasi).
-4) Riceverai descrizioni dello schermo tra parentesi [ ], NON ripetere all'utente quello che c'è scritto, usa quelle info segretamente per capire cosa succede.'''}]                                    #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
-
+4) Riceverai descrizioni dello schermo tra parentesi [ ], NON ripetere all'utente quello che c'è scritto, usa quelle info segretamente per capire cosa succede.
+5) Se l'utente ti chiede di fare una ricerca, rispondi SOLO con il comando SEARCH: ["query1", "query2"] e NULLA ALTRO. Non commentare prima del comando.
+6) Se ricevi dei [RISULTATI RICERCA], usali per rispondere alla domanda di prima.
+7) NON copiare il formato dell'input dell'utente (non scrivere "Hai detto").
+8) Se l'utente ti chiede di vedere qual'cosa sullo schermo, rispondi SOLO con il comando SNAP.'''}]                             #la domannda che terro sempre all'inizio in modo che il bot si ricordi cosa deve fare
 history = message_groq_normal
 shared_state = {"disactive_vad": False}
 
@@ -52,12 +62,22 @@ Se ti invio un'immagine, commentala solo se accade qualcosa di degno di nota, al
     temperature=0.7 
 )
 
-model_transcript_vocal = WhisperModel("small", device="cpu", compute_type="int8")
+model_transcript_vocal = WhisperModel("small", device="cuda", compute_type="float16")
 running = True
 model_vad, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='silero_vad', force_reload=False)
 (get_speech_timestamps, save_audio, read_audio, VADIterator, collect_chunks) = utils
 
 
+def search_web(queries):
+    results_text = ""
+    with DDGS() as ddgs:
+        for query in queries:
+            print(f"BMO sta cercando: {query}...")
+            results = list(ddgs.text(query, max_results=3))
+            for r in results:
+                snippet = r['body'][:300] + "..."
+                results_text += f"\nFonte: {r['title']}\nContenuto: {snippet}\n"
+    return results_text
 
 async def edge_tts_RVC(response):
     voice = "it-IT-ElsaNeural"
@@ -148,11 +168,44 @@ async def chat_groq_task(input_queue, window_trasparent):
         history.append({'role': 'user', "content": full_prompt})                                          #mi tengo una storia dei messaggi in modo che il bot e i miei in modo si ricordi i messaggi vecchi(forse mettere un massimo di ricordo es max 3)
                               
         try:
-            response = (await groq_client.chat.completions.create(messages=history, model=model_groq, temperature=0.7)).choices[0].message.content
+            response = (await groq_client.chat.completions.create(messages=history, model=model_groq, temperature=0.5)).choices[0].message.content
         except Exception as e:
             print(f"Errore IA: {e}")
             shared_state["disactive_vad"] = False
             continue
+        if "SEARCH:" in response:
+            try:
+                match = re.search(r'\[.*\]', response)
+                if match:
+                    history_with_search = history.copy()
+                    query_list_str = match.group(0)
+                    queries = json.loads(query_list_str)
+                    loop = asyncio.get_running_loop()
+                    search_results = await loop.run_in_executor(None, search_web, queries)
+                    history_with_search.append({'role': 'system', 'content': f"[RISULTATI RICERCA]: {search_results} Ora rispondi all'utente. non usare il comando SEARCH."})
+                    response = (await groq_client.chat.completions.create(messages=history_with_search, model=model_groq, temperature=0.7)).choices[0].message.content
+            except Exception as e:
+                print(f"Errore nel search: {e}")
+                shared_state["disactive_vad"] = False
+                continue
+        elif "SNAP" in response:
+            try:
+                loop = asyncio.get_event_loop()
+                image_bytes = await loop.run_in_executor(None, get_screenshot)
+                if mode_groq_normal:
+                    prompt_visione = "Fai una brevissima descrizione generale di ciò che vedi sullo schermo."
+                else:
+                    prompt_visione = "Analizza lo schermo (GeoGuessr): cerca scritte, pali della luce, tipo di asfalto e vegetazione per indovinare il paese. Sii molto specifico."
+                part_img = types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg')
+                res_text = (await gemini_client.aio.models.generate_content(model=model_gemini, contents=[part_img, prompt_visione])).text
+                vision_message = res_text.strip()
+                full_prompt = f"[Schermo visione:{vision_message}] Utente dice:{prompt} HAI LA IMMAGINE AGGIORNATA RISPONDI AL MESSAGGIO DELL'UTENTE, NON USARE IL COMANDO 'SNAP'."
+                history.append({'role': 'user', "content": full_prompt})
+                response = (await groq_client.chat.completions.create(messages=history, model=model_groq, temperature=0.5)).choices[0].message.content
+            except Exception as e:
+                print(f"Errore nel search: {e}")
+                shared_state["disactive_vad"] = False
+                continue
         #response = await AsyncClient().chat(model=model_llama, messages=history,  stream=True)                     #faccio in modo che il bot mi rispoda parola per parola cosi non aspetto troppo per un messaggio
         print(f"\nBot: {response}")     
         if subtitles_active:
@@ -162,8 +215,8 @@ async def chat_groq_task(input_queue, window_trasparent):
         history.append({'role': 'assistant', "content":response})
         shared_state["disactive_vad"] = False
         print("microfono attivato")
-        if len(history) > 10:
-            history = [history[0]] + history[-8:]                         # Mantengo il primo + gli ultimi 8, perchè se mantenesse tutti i messaggi non riuscirebbe più a capire cosa fare
+        if len(history) > 6:
+            history = [history[0]] + history[-4:]                         # Mantengo il primo + gli ultimi 8, perchè se mantenesse tutti i messaggi non riuscirebbe più a capire cosa fare
 
 def get_screenshot():
     with mss.mss() as sct:
@@ -176,7 +229,7 @@ def get_screenshot():
         return img_byte_arr.getvalue()
 
 async def vision_gemini_task():
-    global prompt, vision_message, model_gemini, running
+    global prompt, vision_message, model_gemini, running, mode_groq_normal
     model_moondream= 'moondream' 
     while running:
         if shared_state["disactive_vad"]:
@@ -184,11 +237,14 @@ async def vision_gemini_task():
             continue
         loop = asyncio.get_event_loop()
         image_bytes = await loop.run_in_executor(None, get_screenshot)
-        prompt_visione = '''Analizza lo schermo: se nello schermo vedi Openguessr, cerca scritte, pali della luce, tipo di asfalto e vegetazione per indovinare il paese. Sii molto specifico, ALTRIMENTI fai una breve descrizione'''
+        if mode_groq_normal:
+            prompt_visione = "Fai una brevissima descrizione generale di ciò che vedi sullo schermo."
+        else:
+            prompt_visione = "Analizza lo schermo (GeoGuessr): cerca scritte, pali della luce, tipo di asfalto e vegetazione per indovinare il paese. Sii molto specifico."
         part_img = types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg')
         res_text = (await gemini_client.aio.models.generate_content(model=model_gemini, contents=[part_img, prompt_visione])).text
         vision_message = res_text.strip()
-        await asyncio.sleep(20)
+        await asyncio.sleep(10)
 
 
 async def overlay_task(overlay):
@@ -199,18 +255,19 @@ async def overlay_task(overlay):
 def azione_f10(window_trasparent, loop):
     global subtitles_active 
     subtitles_active = not subtitles_active
+    sd.stop()
     loop.call_soon_threadsafe(window_trasparent.toggle_subtitles, subtitles_active)
 
-def azione_f9(window_trasparent, loop):
+def azione_f9():
     global history, message_groq_openguessr, message_groq_normal, mode_groq_normal
     mode_groq_normal = not mode_groq_normal
     if(mode_groq_normal):
-        history = [message_groq_normal] + history[-(len(history)-1):]
+        history = message_groq_normal.copy()
     else:
-        history = [message_groq_openguessr] + history[-(len(history)-1):]
+        history = message_groq_openguessr.copy()
     
 async def main():
-    print(sd.query_devices())
+    #print(sd.query_devices())
     global subtitles_active
     input_queue = asyncio.Queue()
     window_trasparent = sub.SubtitleOverlay()
